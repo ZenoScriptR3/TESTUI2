@@ -1,6 +1,6 @@
 -- ============================================================
---   KYZENO X PANEL  v3.0  |  LocalScript (FINAL FIX)
---   TESTUI
+--   KYZENO X PANEL  v3.0  |  LocalScript (NO SOUND)
+--   Place in: StarterPlayerScripts
 -- ============================================================
 
 local Players          = game:GetService("Players")
@@ -8,7 +8,6 @@ local UserInputService = game:GetService("UserInputService")
 local RunService       = game:GetService("RunService")
 local TweenService     = game:GetService("TweenService")
 local Lighting         = game:GetService("Lighting")
-local SoundService     = game:GetService("SoundService")
 
 local player    = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -31,7 +30,7 @@ local settings = {
     silentAim=false, silentAimRange=20,
     flingTouch=false, antiNPC=false,
     afk=false, spamE=false, uiScale=1.0,
-    autoLoad=true, muteMusic=false,
+    autoLoad=true,
 }
 
 -- Theme and Font settings
@@ -64,7 +63,6 @@ local themeColors = {
     Purple = { accent=Color3.fromRGB(160,40,255),  bg=Color3.fromRGB(10,5,18),    dark=Color3.fromRGB(20,10,35),   mid=Color3.fromRGB(35,18,55) },
 }
 
--- Valid fonts only (no GothamLight)
 local fontMap = {
     ["Normal"]              = Enum.Font.Gotham,
     ["Montserrat"]          = Enum.Font.Montserrat,
@@ -77,7 +75,6 @@ local fontMap = {
     ["Tajawai"]             = Enum.Font.Arial,
 }
 
--- Current colors (will be updated by theme)
 local C_BG, C_DARK, C_MID, C_LIGHT, C_RED, C_RED_D, C_WHITE, C_GRAY, C_TEXT = nil,nil,nil,nil,nil,nil,nil,nil,nil
 
 local function applyTheme(themeName, fontName)
@@ -95,7 +92,6 @@ local function applyTheme(themeName, fontName)
     C_GRAY = Color3.fromRGB(136,136,136)
     C_TEXT = Color3.fromRGB(224,224,224)
     
-    -- Apply colors to existing UI elements if they exist
     pcall(function()
         if openStroke then openStroke.Color = C_RED end
         if mainStroke then mainStroke.Color = C_RED end
@@ -108,7 +104,6 @@ local function applyTheme(themeName, fontName)
     end)
 end
 
--- Initialize with default theme
 applyTheme("Dark", "Normal")
 
 -- ============================================================
@@ -203,34 +198,29 @@ loadScreen.Name="LoadScreen"; loadScreen.Size=UDim2.new(1,0,1,0)
 loadScreen.Position=UDim2.new(0,0,0,0); loadScreen.BackgroundColor3=Color3.fromRGB(0,0,0)
 loadScreen.BorderSizePixel=0; loadScreen.ZIndex=100; loadScreen.Parent=screenGui
 
--- Logo image
 local loadLogo = Instance.new("ImageLabel")
 loadLogo.Size=UDim2.new(0,90,0,90); loadLogo.Position=UDim2.new(0.5,-45,0.35,-45)
 loadLogo.BackgroundTransparency=1; loadLogo.Image="rbxassetid://106158447709741"
 loadLogo.ImageTransparency=0; loadLogo.ZIndex=101; loadLogo.Parent=loadScreen
 
--- Title
 local loadTitle = Instance.new("TextLabel")
 loadTitle.Size=UDim2.new(0,400,0,36); loadTitle.Position=UDim2.new(0.5,-200,0.5,-4)
-loadTitle.BackgroundTransparency=1; loadTitle.Text="☄️|KYZENO X PANEL|☄️"
+loadTitle.BackgroundTransparency=1; loadTitle.Text="☄️|KYZENO X HUB PANEL|☄️"
 loadTitle.TextColor3=Color3.fromRGB(255,255,255); loadTitle.TextSize=28
 loadTitle.Font=Enum.Font.GothamBlack; loadTitle.ZIndex=101; loadTitle.Parent=loadScreen
 
--- Sub line
 local loadSub = Instance.new("TextLabel")
 loadSub.Size=UDim2.new(0,400,0,20); loadSub.Position=UDim2.new(0.5,-200,0.5,34)
 loadSub.BackgroundTransparency=1; loadSub.Text="VER. 3.0  |  FINAL EDITION"
 loadSub.TextColor3=Color3.fromRGB(204,0,0); loadSub.TextSize=13
 loadSub.Font=Enum.Font.GothamBold; loadSub.ZIndex=101; loadSub.Parent=loadScreen
 
--- Credit line
 local loadCredit = Instance.new("TextLabel")
 loadCredit.Size=UDim2.new(0,400,0,18); loadCredit.Position=UDim2.new(0.5,-200,0.5,60)
-loadCredit.BackgroundTransparency=1; loadCredit.Text="By ZenoR3 ft Me&Who  •  Co-pilot: Claude 4.6 & DEEPSEEK R3"
+loadCredit.BackgroundTransparency=1; loadCredit.Text="By Zeno  •  Co-pilot: Claude 4.6"
 loadCredit.TextColor3=Color3.fromRGB(100,100,100); loadCredit.TextSize=11
 loadCredit.Font=Enum.Font.Gotham; loadCredit.ZIndex=101; loadCredit.Parent=loadScreen
 
--- Loading bar background
 local barBg = Instance.new("Frame")
 barBg.Size=UDim2.new(0,300,0,4); barBg.Position=UDim2.new(0.5,-150,0.65,0)
 barBg.BackgroundColor3=Color3.fromRGB(30,30,30); barBg.BorderSizePixel=0
@@ -242,27 +232,24 @@ barFill.Size=UDim2.new(0,0,1,0); barFill.BackgroundColor3=Color3.fromRGB(204,0,0
 barFill.BorderSizePixel=0; barFill.ZIndex=102; barFill.Parent=barBg
 Instance.new("UICorner",barFill).CornerRadius=UDim.new(1,0)
 
--- Status text
 local loadStatus = Instance.new("TextLabel")
 loadStatus.Size=UDim2.new(0,300,0,16); loadStatus.Position=UDim2.new(0.5,-150,0.65,10)
 loadStatus.BackgroundTransparency=1; loadStatus.Text="Initializing..."
 loadStatus.TextColor3=Color3.fromRGB(120,120,120); loadStatus.TextSize=11
 loadStatus.Font=Enum.Font.Gotham; loadStatus.ZIndex=101; loadStatus.Parent=loadScreen
 
--- OPEN BUTTON - HIDDEN DURING LOADING
 local openButton = Instance.new("ImageButton")
 openButton.Name="OpenButton"; openButton.Size=UDim2.new(0,50,0,50)
 openButton.Position=UDim2.new(0.5,-25,0.5,-25)
 openButton.BackgroundColor3=C_BG; openButton.BorderSizePixel=0
 openButton.Image="rbxassetid://106158447709741"
 openButton.BackgroundTransparency=0.2; openButton.Parent=screenGui
-openButton.Visible = false  -- Hidden during loading
+openButton.Visible = false
 makeDraggable(openButton)
 Instance.new("UICorner",openButton).CornerRadius=UDim.new(0,8)
 local openStroke=Instance.new("UIStroke"); openStroke.Color=C_RED
 openStroke.Thickness=2; openStroke.Parent=openButton
 
--- MAIN FRAME - HIDDEN DURING LOADING
 local mainFrame = Instance.new("Frame")
 mainFrame.Name="MainFrame"; mainFrame.Size=UDim2.new(0,700,0,500)
 mainFrame.Position=UDim2.new(0.5,-350,0.5,-250)
@@ -273,7 +260,6 @@ Instance.new("UICorner",mainFrame).CornerRadius=UDim.new(0,8)
 local mainStroke=Instance.new("UIStroke"); mainStroke.Color=C_RED
 mainStroke.Thickness=2; mainStroke.Parent=mainFrame
 
--- Header
 local header=Instance.new("Frame"); header.Name="Header"
 header.Size=UDim2.new(1,0,0,60); header.BackgroundColor3=Color3.fromRGB(0,0,0)
 header.BorderSizePixel=0; header.Parent=mainFrame
@@ -288,7 +274,7 @@ logoImg.Image="rbxassetid://106158447709741"; logoImg.Parent=header
 
 local titleLbl=Instance.new("TextLabel"); titleLbl.Size=UDim2.new(0,280,0,30)
 titleLbl.Position=UDim2.new(0,75,0,8); titleLbl.BackgroundTransparency=1
-titleLbl.Text="☄️|KYZENO X PANEL|☄️"; titleLbl.TextColor3=C_WHITE
+titleLbl.Text="☄️|KYZENO X HUB PANEL|☄️"; titleLbl.TextColor3=C_WHITE
 titleLbl.TextSize=20; titleLbl.Font=Enum.Font.GothamBlack
 titleLbl.TextXAlignment=Enum.TextXAlignment.Left; titleLbl.Parent=header
 
@@ -304,7 +290,6 @@ closeButton.BackgroundColor3=C_RED; closeButton.Text="✕"; closeButton.TextColo
 closeButton.TextSize=18; closeButton.Font=Enum.Font.GothamBold; closeButton.Parent=header
 Instance.new("UICorner",closeButton).CornerRadius=UDim.new(0,6)
 
--- NAV BAR
 local navScroll = Instance.new("ScrollingFrame")
 navScroll.Name="NavScroll"
 navScroll.Size=UDim2.new(1,0,0,38)
@@ -328,7 +313,6 @@ navLayout.SortOrder=Enum.SortOrder.LayoutOrder
 navLayout.Padding=UDim.new(0,0)
 navLayout.Parent=navScroll
 
--- Sidebar
 local sidebar=Instance.new("Frame"); sidebar.Name="Sidebar"
 sidebar.Size=UDim2.new(0,200,1,-98); sidebar.Position=UDim2.new(0,0,0,98)
 sidebar.BackgroundColor3=Color3.fromRGB(13,13,13); sidebar.BorderSizePixel=0; sidebar.Parent=mainFrame
@@ -353,7 +337,6 @@ sbCredits.TextColor3=C_GRAY; sbCredits.TextSize=12; sbCredits.Font=Enum.Font.Got
 sbCredits.TextXAlignment=Enum.TextXAlignment.Left; sbCredits.TextWrapped=true
 sbCredits.LineHeight=1.8; sbCredits.Parent=sidebar
 
--- Content Area
 local contentArea=Instance.new("ScrollingFrame"); contentArea.Name="ContentArea"
 contentArea.Size=UDim2.new(1,-200,1,-98); contentArea.Position=UDim2.new(0,200,0,98)
 contentArea.BackgroundColor3=Color3.fromRGB(13,13,13); contentArea.BorderSizePixel=0
@@ -538,7 +521,6 @@ local function createTextInput(labelText, placeholder, callback)
     return container,tb
 end
 
--- Dropdown helper
 local activeDropdown = nil
 local function createDropdownRow(labelText, getDisplayText, items, onSelect)
     local wrapper = Instance.new("Frame")
@@ -607,7 +589,6 @@ local function createDropdownRow(labelText, getDisplayText, items, onSelect)
     return wrapper, dropBtn
 end
 
--- Scale function
 local function setUIScale(scale)
     settings.uiScale = math.clamp(scale, 0.1, 2.0)
     local newWidth = 700 * settings.uiScale
@@ -667,7 +648,7 @@ sectionFunctions["SETTINGS"] = function()
             if e:IsA("PostEffect") then e.Enabled=not on end 
         end
     end)
-    
+end
 
 -- ============================================================
 --  SECTION: LOCAL PLAYER
@@ -1428,17 +1409,17 @@ end
 -- ============================================================
 sectionFunctions["OTHERS"] = function()
     createSectionTitle("OTHERS")
-    createInfoLabel("Design: Me & Claude")
-    createInfoLabel("By: Zeno")
-    createInfoLabel("Co-pilot: Claude 4.6")
+    createInfoLabel("Design: Me & Who")
+    createInfoLabel("By: ZenoScriptR3")
+    createInfoLabel("Co-pilot: C4.6 & Dr3")
     createInfoLabel("Version: Final Edition")
-    createInfoLabel("")
-    createInfoLabel("All features working:")
+    createInfoLabel("Use at your own risk! We don't have Anti-detect")
+    createInfoLabel("All features working.. only some aren't")
     createInfoLabel("- ESP, Fly, AIM Assist")
     createInfoLabel("- Anti-Fling, Anti-Void")
     createInfoLabel("- AFK Protection, Spam E")
     createInfoLabel("- Themes, Fonts, UI Scaling")
-    createInfoLabel("- Auto Load, Music Mute")
+    createInfoLabel("- Auto Load")
 end
 
 -- ============================================================
@@ -1526,7 +1507,7 @@ for _,sec in ipairs(navSections) do
 end
 
 -- ============================================================
---  Navigation and Show/Hide Functions
+--  Navigation Functions
 -- ============================================================
 local function updateNavStyle(selectedName)
     for _,btn in ipairs(navScroll:GetChildren()) do
@@ -1561,23 +1542,23 @@ closeButton.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================================
---  Loading Animation - Show UI after loading
+--  Loading Animation
 -- ============================================================
 task.spawn(function()
     local steps = {
-        { pct=0.15, msg="Loading KYZENO X HUB...",   t=0.18 },
+        { pct=0.15, msg="Loading modules...",   t=0.18 },
         { pct=0.35, msg="Building UI...",        t=0.18 },
         { pct=0.55, msg="Applying theme...",     t=0.18 },
         { pct=0.75, msg="Hooking services...",   t=0.18 },
         { pct=0.95, msg="Almost ready...",       t=0.18 },
-        { pct=1.00, msg="Welcome, To KYZENO "..player.DisplayName.."!", t=0.2 },
+        { pct=1.00, msg="Welcome, "..player.DisplayName.."!", t=0.2 },
     }
     for _,step in ipairs(steps) do
         TweenService:Create(barFill, TweenInfo.new(step.t, Enum.EasingStyle.Quad), {Size=UDim2.new(step.pct,0,1,0)}):Play()
         loadStatus.Text = step.msg
-        task.wait(step.t + 0.5)
+        task.wait(step.t + 1)
     end
-    task.wait(3)
+    task.wait(6)
     local targets = {loadScreen, loadLogo, loadTitle, loadSub, loadCredit, barBg, loadStatus}
     for _,obj in ipairs(targets) do
         local prop = obj:IsA("TextLabel") and "TextTransparency"
@@ -1637,6 +1618,7 @@ player.CharacterAdded:Connect(function(char)
     if settings.walkSpeed and char:FindFirstChild("Humanoid") then
         char.Humanoid.WalkSpeed = settings.walkSpeed
     end
+end)
 
 Players.PlayerAdded:Connect(function(p)
     p.CharacterAdded:Connect(function() 
