@@ -331,7 +331,7 @@ sbLine.BorderSizePixel=0; sbLine.Parent=sidebar
 local sbCredits=Instance.new("TextLabel"); sbCredits.Size=UDim2.new(1,-20,0,160)
 sbCredits.Position=UDim2.new(0,10,0,60); sbCredits.BackgroundTransparency=1
 sbCredits.Text="Design: Me & Who\nMade By: ZENOSCRIPTR3"
-sbCredits.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(26,26,26)),ColorSequenceKeypoint.new(1,Color3.fromRGB(13,13,13))});
+sbCredits.TextColor3=C_MID;
 sbCredits.TextSize=13; sbCredits.Font=Enum.Font.Gotham
 sbCredits.TextXAlignment=Enum.TextXAlignment.Left; sbCredits.TextWrapped=true
 sbCredits.LineHeight=1.8; sbCredits.Parent=sidebar
