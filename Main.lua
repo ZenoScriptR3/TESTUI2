@@ -1,6 +1,5 @@
 -- ============================================================
 --   KYZENO X PANEL  v3.0  |  LocalScript (COMPLETE FIX)
---   Place in: StarterPlayerScripts
 -- ============================================================
 
 local Players          = game:GetService("Players")
@@ -667,7 +666,7 @@ sectionFunctions={}
 sectionFunctions["SETTINGS"]=function()
     createSectionTitle("SETTINGS")
     createToggle("Night Mode","nightMode",function(on)
-        if on then originalBrightness=Lighting.Brightness; Lighting.Brightness=0.5; Lighting.Ambient=Color3.fromRGB(50,50,50)
+        if on then originalBrightness=Lighting.Brightness; Lighting.Brightness=0.1; Lighting.Ambient=Color3.fromRGB(50,50,50)
         else Lighting.Brightness=originalBrightness; Lighting.Ambient=Color3.fromRGB(128,128,128) end
     end)
     createToggle("Remove Texture","removeTexture",function(on)
