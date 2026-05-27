@@ -40,7 +40,6 @@ local currentFontName = "Normal"
 
 local originalTextures  = {}
 local originalBrightness = Lighting.Brightness
-local originalMusicVolume = SoundService.Volume
 local espObjects        = {}
 local espToolObjects    = {}
 local noClipConn, antiVoidConn, infJumpConn, flyConn = nil,nil,nil,nil
@@ -669,17 +668,6 @@ sectionFunctions["SETTINGS"] = function()
         end
     end)
     
-    -- Sound settings
-    createInfoLabel("── Sounds ──")
-    createToggle("Mute Music","muteMusic",function(on)
-        if on then
-            originalMusicVolume = SoundService.Volume
-            SoundService.Volume = 0
-        else
-            SoundService.Volume = originalMusicVolume
-        end
-    end)
-end
 
 -- ============================================================
 --  SECTION: LOCAL PLAYER
@@ -1649,10 +1637,6 @@ player.CharacterAdded:Connect(function(char)
     if settings.walkSpeed and char:FindFirstChild("Humanoid") then
         char.Humanoid.WalkSpeed = settings.walkSpeed
     end
-    if settings.muteMusic then
-        SoundService.Volume = 0
-    end
-end)
 
 Players.PlayerAdded:Connect(function(p)
     p.CharacterAdded:Connect(function() 
